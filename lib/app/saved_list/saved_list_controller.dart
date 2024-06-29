@@ -1,6 +1,8 @@
+import 'package:form/common_widgets/custom_loader.dart';
 import 'package:form/service/firebase_service.dart';
 import 'package:get/get.dart';
 
+import '../../common_widgets/custom_toast.dart';
 import '../../models/user_data_model.dart';
 
 class SavedListController extends GetxController {
@@ -13,6 +15,13 @@ class SavedListController extends GetxController {
   }
 
   Future<void> getUsers() async {
-    userList.value = await FirebaseService().getUserList();
+    try {
+      loader();
+      userList.value = await FirebaseService().getUserList();
+      Get.back();
+    } catch (e) {
+      Get.back();
+      customToast(msg: "Please check your internet connection.");
+    }
   }
 }

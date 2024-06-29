@@ -9,6 +9,7 @@ Widget customTextField({
   String? hintText,
   required String title,
   TextInputType? keyboardType,
+  void Function(String)? onChanged,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,6 +26,7 @@ Widget customTextField({
       TextFormField(
         controller: controller,
         validator: validator,
+        onChanged: onChanged,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           border: OutlineInputBorder(

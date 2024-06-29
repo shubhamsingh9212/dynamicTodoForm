@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:form/app/saved_form_data/saved_form_data_controller.dart';
 import 'package:form/common_widgets/custom_elevated_button.dart';
@@ -33,30 +35,42 @@ Widget savedFormDataBody({
                 return Column(
                   children: [
                     customTextField(
-                      hintText: fields?.placeHolder ?? "",
-                      keyboardType: fields?.fieldType == "Number"
-                          ? TextInputType.number
-                          : null,
-                      title: fields?.fieldTitle ?? "",
-                      controller: fields?.controller ?? TextEditingController(),
-                      validator: (val) {
-                        return controller.fieldValidation(
-                          fieldType: fields?.fieldType ?? "",
-                          fieldTitle: fields?.fieldTitle ?? "",
-                        );
-                      },
-                    ),
+                        hintText: fields?.placeHolder ?? "",
+                        keyboardType: fields?.fieldType == "Number"
+                            ? TextInputType.number
+                            : fields?.fieldType == "Email"
+                                ? TextInputType.emailAddress
+                                : null,
+                        title: fields?.fieldTitle ?? "",
+                        controller:
+                            fields?.controller ?? TextEditingController(),
+                        validator: (val) {
+                          return controller.fieldValidation(
+                            val: val,
+                            fieldType: fields?.fieldType ?? "",
+                            fieldTitle: fields?.fieldTitle ?? "",
+                          );
+                        },
+                        onChanged: (val) {
+                          controller.userFormKey.currentState!.validate();
+                        }),
                     customHeight(35),
                   ],
                 );
               },
             ),
-            customElevatedButton(
-              onPressed: () {
-                if (controller.userFormKey.currentState!.validate()) {}
-              },
-              label: "Check Validation",
+            SizedBox(
               width: width,
+              child: Center(
+                child: customElevatedButton(
+                  onPressed: () {
+                    controller.isValidationChecked.value = true;
+                    if (controller.userFormKey.currentState!.validate()) {}
+                  },
+                  label: "Check Validation",
+                  width: width,
+                ),
+              ),
             ),
           ],
         ),

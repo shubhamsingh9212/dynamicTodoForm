@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form/app/form/form_controller.dart';
 import 'package:form/common_widgets/custom_card.dart';
 import 'package:form/common_widgets/custom_sizedbox.dart';
-import 'package:form/common_widgets/custom_toast.dart';
 import 'package:form/routes/app_pages.dart';
-import 'package:form/service/firebase_service.dart';
 import 'package:get/get.dart';
 import '../../common_widgets/custom_elevated_button.dart';
 
@@ -37,8 +35,8 @@ Widget formBody({
             ),
           ),
           customHeight(25),
-          Obx(
-            () => ListView.builder(
+          GetBuilder<FormController>(
+            builder: (controller) => ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: controller.formList.length,
@@ -47,7 +45,7 @@ Widget formBody({
                   children: [
                     dataCard(
                       name:
-                          "Name : ${controller.formList[index]["user_name"] ?? ""}",
+                          "Name : ${controller.formList[index]["user_name"] ?? ""}   +   ${controller.formList[index]["data"].length} fields",
                     ),
                     customHeight(25),
                   ],
@@ -80,15 +78,7 @@ Widget floatingActionButton({double width = 20}) {
           width: width * 0.4,
           child: customElevatedButton(
             onPressed: () async {
-              if (controller.formList.isEmpty) {
-                customToast(msg: "Please enter some fields!");
-              } else {
-                RxList<Map<String, dynamic>> formList = controller.formList;
-                FirebaseService().addData(formList);
-                controller.savedListController.userList.value =
-                    await FirebaseService().getUserList();
-                Get.offAllNamed(Routes.HOME);
-              }
+              await controller.saveData();
             },
             label: "Save",
             width: width,

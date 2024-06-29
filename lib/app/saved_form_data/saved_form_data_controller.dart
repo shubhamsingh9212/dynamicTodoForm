@@ -6,6 +6,8 @@ import '../../models/user_data_model.dart';
 class SavedFormDataController extends GetxController {
   UserData userData = Get.arguments;
   GlobalKey<FormState> userFormKey = GlobalKey();
+  RxBool isValidationChecked = false.obs;
+
   String? validateEmail({
     String? value,
     required String fieldTitle,
@@ -47,20 +49,22 @@ class SavedFormDataController extends GetxController {
     required String fieldTitle,
     String? val,
   }) {
-    if (fieldType == "Email") {
-      return validateEmail(
-        value: val,
-        fieldTitle: fieldTitle,
-      );
-    } else if (fieldType == "Password") {
-      return validatePassword(
-        value: val,
-        fieldTitle: fieldTitle,
-      );
-    } else if (val == null || val.trim() == "") {
-      return "$fieldTitle Required.";
-    } else {
-      return null;
+    if (isValidationChecked.value) {
+      if (fieldType == "Email") {
+        return validateEmail(
+          value: val,
+          fieldTitle: fieldTitle,
+        );
+      } else if (fieldType == "Password") {
+        return validatePassword(
+          value: val,
+          fieldTitle: fieldTitle,
+        );
+      } else if (val == null || val.trim() == "") {
+        return "$fieldTitle Required.";
+      } else {
+        return null;
+      }
     }
   }
 }

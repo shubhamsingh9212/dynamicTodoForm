@@ -6,8 +6,8 @@ import '../saved_list/saved_list_controller.dart';
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put<HomeController>(
-      HomeController(),
+    Get.lazyPut<HomeController>(
+      () => HomeController(),
     );
     Get.put<SavedListController>(
       SavedListController(),
